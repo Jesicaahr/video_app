@@ -22,7 +22,7 @@ import {
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  flex: 1.4;
+  flex: 1.5;
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   height: 100vh;
@@ -70,7 +70,6 @@ const Item = styled.div`
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  //   border: 1px solid yellow;
   padding: 0.5rem 0rem;
 `;
 
@@ -180,7 +179,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
         </Item>
         <Item onClick={() => setDarkMode(!darkMode)}>
           <SettingsBrightnessOutlined />
-          Light Mode
+          {darkMode ? 'Light' : 'Dark'} Mode
         </Item>
       </Wrapper>
     </Container>
