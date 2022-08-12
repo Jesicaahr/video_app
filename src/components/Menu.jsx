@@ -19,6 +19,7 @@ import {
   SettingsBrightnessOutlined,
   AccountCircleOutlined,
 } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Container = styled.div`
   flex: 1.4;
@@ -104,10 +105,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
   return (
     <Container>
       <Wrapper>
-        <Logo>
-          <Img src={LogoTube} />
-          YouyouTube
-        </Logo>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Logo>
+            <Img src={LogoTube} />
+            Traveltube
+          </Logo>
+        </Link>
         <Item>
           <Home />
           Home
