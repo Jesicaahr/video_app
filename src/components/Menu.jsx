@@ -22,7 +22,7 @@ import {
 
 const Container = styled.div`
   flex: 1.4;
-  background-color: ${({ theme }) => theme.bg};
+  background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   height: 100vh;
   font-size: 0.9rem;
@@ -86,7 +86,7 @@ const Button = styled.button`
   color: #3ea6ff;
   border-radius: 3px;
   font-weight: 500;
-  margin-top: 0.8rem;
+  margin-top: 0.6rem;
   cursor: pointer;
   display: flex;
   align-items: center;

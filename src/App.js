@@ -21,9 +21,7 @@ function App() {
         <Menu darkMode={darkMode} setDarkMode={setDarkMode} />
         <Main>
           <Navbar />
-          <Wrapper>
-            <h1>Test</h1>
-          </Wrapper>
+          <Wrapper></Wrapper>
         </Main>
       </Container>
     </ThemeProvider>
