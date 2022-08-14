@@ -6,6 +6,7 @@ import {
 } from '@mui/icons-material';
 import React from 'react';
 import styled from 'styled-components';
+import Comments from '../components/Comments';
 
 const Container = styled.div`
   display: flex;
@@ -61,6 +62,55 @@ const Recommendation = styled.div`
   background-color: green;
 `;
 
+const Channel = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const ChannelInfo = styled.div`
+  display: flex;
+  gap: 0.8rem;
+`;
+
+const Image = styled.img`
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+`;
+
+const ChannelDetail = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: ${({ theme }) => theme.text};
+`;
+
+const ChannelName = styled.span`
+  font-weight: 500;
+`;
+
+const ChannelCounter = styled.span`
+  margin-top: 0.5rem;
+  margin-bottom: 0.85rem;
+  color: ${({ theme }) => theme.textSoft};
+  font-size: 0.85rem;
+`;
+
+const Description = styled.p`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.text};
+`;
+
+const Subscribe = styled.button`
+  background: #cc1a00;
+  font-weight: 500;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  height: max-content;
+  padding: 5px 0.6rem;
+  cursor: pointer;
+`;
+
 function Video() {
   return (
     <Container>
@@ -95,6 +145,24 @@ function Video() {
           </Buttons>
         </Details>
         <Hr />
+        <Channel>
+          <ChannelInfo>
+            <Image src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png" />
+            <ChannelDetail>
+              <ChannelName>Jalan Yuk</ChannelName>
+              <ChannelCounter>200K Subscriber</ChannelCounter>
+              <Description>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Deleniti ratione dicta est corrupti quaerat atque provident
+                placeat! Harum quas delectus hic cupiditate itaque. Veniam
+                nesciunt fuga reprehenderit recusandae ex ducimus.
+              </Description>
+            </ChannelDetail>
+          </ChannelInfo>
+          <Subscribe>SUBSCRIBE</Subscribe>
+        </Channel>
+        <Hr />
+        <Comments />
       </Content>
       <Recommendation>Recomendation</Recommendation>
     </Container>

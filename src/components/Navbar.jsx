@@ -16,7 +16,6 @@ const Wrapper = styled.div`
   height: 100%;
   padding: 0px 20px;
   position: relative;
-  /* background-color: yellow; */
 `;
 
 const Search = styled.div`
@@ -25,7 +24,6 @@ const Search = styled.div`
   left: 0px;
   right: 0px;
   margin: auto;
-  /* background-color: red; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,9 +35,8 @@ const Search = styled.div`
 const Input = styled.input`
   border: none;
   background-color: transparent;
-  :focus {
-    outline: none;
-  }
+  outline: none;
+  color: ${({ theme }) => theme.text};
 `;
 
 const Button = styled.button`
