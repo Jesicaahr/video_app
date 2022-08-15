@@ -22,7 +22,7 @@ import {
 import { Link } from 'react-router-dom';
 
 const Container = styled.div`
-  flex: 1.5;
+  flex: 1.3;
   background-color: ${({ theme }) => theme.bgLighter};
   color: ${({ theme }) => theme.text};
   height: 100vh;
@@ -30,7 +30,6 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   overflow-y: scroll;
-  //   border: 1px solid red;
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -50,7 +49,6 @@ const Container = styled.div`
 const Wrapper = styled.div`
   padding: 0.7rem 1.7rem;
   margin-right: 0rem;
-  //   border: 1px solid yellow;
 `;
 
 const Logo = styled.div`

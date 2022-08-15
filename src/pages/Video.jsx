@@ -7,13 +7,14 @@ import {
 import React from 'react';
 import styled from 'styled-components';
 import Comments from '../components/Comments';
+import Card from '../components/Card';
 
 const Container = styled.div`
   display: flex;
   gap: 24px;
 `;
 const Content = styled.div`
-  flex: 5;
+  flex: 4.5;
   /* background-color: blue; */
 `;
 
@@ -59,7 +60,6 @@ const Hr = styled.hr`
 
 const Recommendation = styled.div`
   flex: 2;
-  background-color: green;
 `;
 
 const Channel = styled.div`
@@ -164,7 +164,12 @@ function Video() {
         <Hr />
         <Comments />
       </Content>
-      <Recommendation>Recomendation</Recommendation>
+      <Recommendation>
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+        <Card type="sm" />
+      </Recommendation>
     </Container>
   );
 }
