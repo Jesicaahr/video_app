@@ -7,7 +7,6 @@ const Container = styled.div`
   margin-bottom: ${(props) => (props.type === 'sm' ? '1.5rem' : '2rem')};
   cursor: pointer;
   display: ${(props) => props.type === 'sm' && 'flex'};
-  /* background-color: red; */
 `;
 
 const Image = styled.img`
