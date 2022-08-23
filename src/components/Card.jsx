@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { format } from 'timeago.js';
+import axios from 'axios';
 
 const Container = styled.div`
   width: ${(props) => props.type !== 'sm' && '16rem'};
@@ -47,23 +49,30 @@ const Info = styled.h2`
   color: ${({ theme }) => theme.textSoft};
 `;
 
-function Card({ type }) {
+function Card({ type, video }) {
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchChannel = async () => {
+      const res = await axios.get(
+        `http://localhost:5000/api/v1/user/find/${video.userId}`
+      );
+      setChannel(res.data);
+    };
+    fetchChannel();
+  }, [video.userId]);
   return (
     <Link to="/video/test" style={{ textDecoration: 'none', color: 'inherit' }}>
       <Container type={type}>
-        <Image
-          type={type}
-          src="https://www.dochipo.com/wp-content/uploads/2021/09/YouTube-Thumbnail-_-Travel-6-1024x576.png"
-        />
+        <Image type={type} src={video.imgUrl} />
         <Details type={type}>
-          <ChannelImage
-            type={type}
-            src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png"
-          />
+          <ChannelImage type={type} src={channel.img} />
           <Texts>
-            <Title>Top 10 Experiences in Sout-East Asia</Title>
-            <ChannelName>Jalan Yuk</ChannelName>
-            <Info>832,990 views • 5 days ago</Info>
+            <Title>{video.title}</Title>
+            <ChannelName>{channel.name}</ChannelName>
+            <Info>
+              {video.views} views • {format(video.createdAt)}
+            </Info>
           </Texts>
         </Details>
       </Container>
