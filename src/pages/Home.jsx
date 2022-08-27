@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Card from '../components/Card';
 import axios from 'axios';
+import { hostingUrl } from '../host';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+const token = cookies.get('token');
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +19,15 @@ function Home({ type }) {
 
   useEffect(() => {
     const fetchVideos = async () => {
-      const res = await axios.get(`http://localhost:5000/api/v1/video/${type}`);
+      const res = await axios({
+        method: 'get',
+        url: `${hostingUrl}/video/${type}`,
+        headers: {
+          // access_token: localStorage.token,
+          access_token: token,
+        },
+      });
+
       setVideos(res.data);
     };
     fetchVideos();

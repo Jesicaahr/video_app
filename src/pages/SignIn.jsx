@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice';
+import { hostingUrl } from '../host';
+import Cookies from 'universal-cookie';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 const Container = styled.div`
   display: flex;
@@ -77,15 +81,41 @@ function SignIn() {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const res = await axios.post('http://localhost:5000/api/v1/auth/signin', {
+      const res = await axios.post(`${hostingUrl}/auth/signin`, {
         email,
         password,
       });
+      const access_token = res.data.access_token;
+      const cookies = new Cookies();
+
+      cookies.set('token', access_token, { path: '/' });
+      // localStorage.setItem('token', access_token);
       dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure());
     }
   };
+
+  const signInWithGoogle = async () => {
+    dispatch(loginStart());
+
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        axios
+          .post(`${hostingUrl}/auth/google`, {
+            name: result.user.displayName,
+            email: result.user.email,
+            img: result.user.photoURL,
+          })
+          .then((res) => {
+            dispatch(loginSuccess(res.data));
+          });
+      })
+      .catch((err) => {
+        dispatch(loginFailure());
+      });
+  };
+
   return (
     <Container>
       <Wrapper>
@@ -99,6 +129,7 @@ function SignIn() {
         />
         <Button onClick={handleLogin}>Sign in</Button>
         <Title>Or</Title>
+        <Button onClick={signInWithGoogle}>Signin with Google</Button>
         <Input
           placeholder="username"
           onChange={(e) => setName(e.target.value)}
