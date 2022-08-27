@@ -1,7 +1,9 @@
 import {
   AddTaskOutlined,
   ReplyOutlined,
+  ThumbDown,
   ThumbDownOutlined,
+  ThumbUp,
   ThumbUpOutlined,
 } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
@@ -12,8 +14,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { hostingUrl } from '../host';
-import { fetchFailure, fetchSuccess } from '../redux/videoSlice';
+import { dislike, fetchFailure, fetchSuccess, like } from '../redux/videoSlice';
 import { format } from 'timeago.js';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+const token = cookies.get('token');
 
 const Container = styled.div`
   display: flex;
@@ -134,7 +139,6 @@ function Video() {
         const channelRes = await axios.get(
           `${hostingUrl}/user/find/${videoRes.data.userId}`
         );
-
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
@@ -143,6 +147,27 @@ function Video() {
     };
     fetchData();
   }, [path, dispatch]);
+
+  const handleLike = async () => {
+    await axios({
+      method: 'put',
+      url: `${hostingUrl}/user/like/${currentVideo._id}`,
+      headers: {
+        access_token: token,
+      },
+    });
+    dispatch(like(currentUser.id));
+  };
+  const handleDislike = async () => {
+    await axios({
+      method: 'put',
+      url: `${hostingUrl}/user/dislike/${currentVideo._id}`,
+      headers: {
+        access_token: token,
+      },
+    });
+    dispatch(dislike(currentUser.id));
+  };
 
   return (
     <Container>
@@ -164,11 +189,22 @@ function Video() {
             {currentVideo.views} views • {format(currentVideo.createdAt)}
           </Info>
           <Buttons>
-            <Button>
-              <ThumbUpOutlined /> {currentVideo.likes?.length}
+            <Button onClick={handleLike}>
+              {/* STILL ERROR IF NOT LOGIN */}
+              {currentVideo.likes?.includes(currentUser.id) ? (
+                <ThumbUp />
+              ) : (
+                <ThumbUpOutlined />
+              )}{' '}
+              {currentVideo.likes?.length}
             </Button>
-            <Button>
-              <ThumbDownOutlined /> Dislike
+            <Button onClick={handleDislike}>
+              {currentVideo.dislikes?.includes(currentUser.id) ? (
+                <ThumbDown />
+              ) : (
+                <ThumbDownOutlined />
+              )}{' '}
+              Dislike
             </Button>
             <Button>
               <ReplyOutlined /> Share
