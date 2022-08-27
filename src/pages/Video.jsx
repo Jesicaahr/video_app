@@ -4,10 +4,16 @@ import {
   ThumbDownOutlined,
   ThumbUpOutlined,
 } from '@mui/icons-material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Comments from '../components/Comments';
 import Card from '../components/Card';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { hostingUrl } from '../host';
+import { fetchFailure, fetchSuccess } from '../redux/videoSlice';
+import { format } from 'timeago.js';
 
 const Container = styled.div`
   display: flex;
@@ -112,6 +118,32 @@ const Subscribe = styled.button`
 `;
 
 function Video() {
+  const { currentUser } = useSelector((state) => state.user);
+  const { currentVideo } = useSelector((state) => state.video);
+  const dispatch = useDispatch();
+
+  const path = useLocation().pathname.split('/')[2];
+
+  // const [video, setVideo] = useState({});
+  const [channel, setChannel] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const videoRes = await axios.get(`${hostingUrl}/video/find/${path}`);
+        const channelRes = await axios.get(
+          `${hostingUrl}/user/find/${videoRes.data.userId}`
+        );
+
+        setChannel(channelRes.data);
+        dispatch(fetchSuccess(videoRes.data));
+      } catch (error) {
+        dispatch(fetchFailure());
+      }
+    };
+    fetchData();
+  }, [path, dispatch]);
+
   return (
     <Container>
       <Content>
@@ -121,17 +153,19 @@ function Video() {
             height="430rem"
             src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
             title="Youtube Video Player"
-            frameborder="0"
+            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
         </VideoWrapper>
-        <Title>Test Video</Title>
+        <Title>{currentVideo.title}</Title>
         <Details>
-          <Info>7,894,332 views • August 12, 2022</Info>
+          <Info>
+            {currentVideo.views} views • {format(currentVideo.createdAt)}
+          </Info>
           <Buttons>
             <Button>
-              <ThumbUpOutlined /> 237
+              <ThumbUpOutlined /> {currentVideo.likes?.length}
             </Button>
             <Button>
               <ThumbDownOutlined /> Dislike
@@ -147,16 +181,11 @@ function Video() {
         <Hr />
         <Channel>
           <ChannelInfo>
-            <Image src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png" />
+            <Image src={channel.img} />
             <ChannelDetail>
-              <ChannelName>Jalan Yuk</ChannelName>
-              <ChannelCounter>200K Subscriber</ChannelCounter>
-              <Description>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Deleniti ratione dicta est corrupti quaerat atque provident
-                placeat! Harum quas delectus hic cupiditate itaque. Veniam
-                nesciunt fuga reprehenderit recusandae ex ducimus.
-              </Description>
+              <ChannelName>{channel.name}</ChannelName>
+              <ChannelCounter>{channel.subscribers} Subscriber</ChannelCounter>
+              <Description>{currentVideo.desc}</Description>
             </ChannelDetail>
           </ChannelInfo>
           <Subscribe>SUBSCRIBE</Subscribe>
@@ -164,12 +193,12 @@ function Video() {
         <Hr />
         <Comments />
       </Content>
-      <Recommendation>
+      {/* <Recommendation>
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
-      </Recommendation>
+      </Recommendation> */}
     </Container>
   );
 }
