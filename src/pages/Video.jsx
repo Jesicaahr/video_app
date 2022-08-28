@@ -31,9 +31,9 @@ const Container = styled.div`
   display: flex;
   gap: 24px;
 `;
+
 const Content = styled.div`
   flex: 4.5;
-  /* background-color: blue; */
 `;
 
 const VideoWrapper = styled.div``;
