@@ -129,6 +129,12 @@ const Subscribe = styled.button`
   cursor: pointer;
 `;
 
+const VideoFrame = styled.video`
+  max-height: 720px;
+  width: 100%;
+  object-fit: cover;
+`;
+
 function Video() {
   const { currentUser } = useSelector((state) => state.user);
   const { currentVideo, loading } = useSelector((state) => state.video);
@@ -200,7 +206,8 @@ function Video() {
       {!loading && currentVideo ? (
         <Content>
           <VideoWrapper>
-            <iframe
+            <VideoFrame src={currentVideo.videoUrl}></VideoFrame>
+            {/* <iframe
               width="100%"
               height="430rem"
               src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
@@ -208,7 +215,7 @@ function Video() {
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-            ></iframe>
+            ></iframe> */}
           </VideoWrapper>
           <Title>{currentVideo.title}</Title>
           <Details>
@@ -259,15 +266,15 @@ function Video() {
             </Subscribe>
           </Channel>
           <Hr />
-          <Comments />
+          <Comments videoId={currentVideo._id} />
         </Content>
       ) : null}
-      {/* <Recommendation>
+      <Recommendation>
+        {/* <Card type="sm" />
         <Card type="sm" />
         <Card type="sm" />
-        <Card type="sm" />
-        <Card type="sm" />
-      </Recommendation> */}
+        <Card type="sm" /> */}
+      </Recommendation>
     </Container>
   );
 }

@@ -1,5 +1,8 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { format } from 'timeago.js';
+import { hostingUrl } from '../host';
 
 const Container = styled.div`
   display: flex;
@@ -35,20 +38,26 @@ const Text = styled.span`
   color: ${({ theme }) => theme.text};
 `;
 
-function Comment() {
+function Comment({ comment }) {
+  const [channel, setChannel] = useState({});
+  useEffect(() => {
+    const fetchComment = async () => {
+      const channelRes = await axios.get(
+        `${hostingUrl}/user/find/${comment.userId}`
+      );
+      setChannel(channelRes.data);
+    };
+    fetchComment();
+  }, [comment.userId]);
+
   return (
     <Container>
-      <Avatar src="https://cdn.icon-icons.com/icons2/2643/PNG/512/female_woman_person_people_avatar_icon_159366.png" />
+      <Avatar src={channel.img} />
       <Details>
         <Name>
-          John Doe <Date>1 hour ago</Date>
+          {channel.name} <Date>{format(comment.createdAt)}</Date>
         </Name>
-        <Text>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste eligendi
-          nulla placeat ratione animi, assumenda suscipit, necessitatibus in
-          iure, et repellendus? Pariatur eius quidem corrupti tenetur beatae
-          voluptatum cupiditate nulla?
-        </Text>
+        <Text>{comment.desc}</Text>
       </Details>
     </Container>
   );
