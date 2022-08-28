@@ -10,11 +10,12 @@ const Container = styled.div`
   margin-bottom: ${(props) => (props.type === 'sm' ? '1.5rem' : '2rem')};
   cursor: pointer;
   display: ${(props) => props.type === 'sm' && 'flex'};
+  gap: ${(props) => props.type === 'sm' && '5px'};
 `;
 
 const Image = styled.img`
-  width: 100%;
-  height: ${(props) => (props.type === 'sm' ? '7rem' : '9rem')};
+  width: ${(props) => (props.type === 'sm' ? '1rem' : '100%')};
+  max-height: ${(props) => (props.type === 'sm' ? '7rem' : '9rem')};
   background-color: #999;
   flex: 1;
 `;

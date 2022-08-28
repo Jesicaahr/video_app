@@ -5,12 +5,12 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: 'AIzaSyB6KTgfHqj4Yjf_khneBjBtSHjr6Zlg73g',
-  authDomain: 'traveltube-72ed6.firebaseapp.com',
-  projectId: 'traveltube-72ed6',
-  storageBucket: 'traveltube-72ed6.appspot.com',
-  messagingSenderId: '730013318417',
-  appId: '1:730013318417:web:cd6f9becc60b758a90e0b0',
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 // Initialize Firebase

@@ -163,7 +163,6 @@ function Upload({ setOpen }) {
       },
     });
     setOpen(false);
-    console.log(res);
     res.status === 201 && navigate(`/video/${res.data._id}`);
   };
 

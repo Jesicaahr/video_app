@@ -114,10 +114,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
             Traveltube
           </Logo>
         </Link>
-        <Item>
-          <Home />
-          Home
-        </Item>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Item>
+            <Home />
+            Home
+          </Item>
+        </Link>
         <Link to="/trends" style={{ textDecoration: 'none', color: 'inherit' }}>
           <Item>
             <ExploreOutlined />
@@ -156,7 +158,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
             <Hr />
           </>
         )}
-        <Title>BEST OF YOUYOUTUBE</Title>
+        <Title>BEST OF TRAVELTUBE</Title>
         <Item>
           <LibraryMusicOutlined />
           Music
