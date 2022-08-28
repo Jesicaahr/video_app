@@ -14,9 +14,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { hostingUrl } from '../host';
-import { dislike, fetchFailure, fetchSuccess, like } from '../redux/videoSlice';
+import {
+  dislike,
+  fetchFailure,
+  fetchStart,
+  fetchSuccess,
+  like,
+} from '../redux/videoSlice';
 import { format } from 'timeago.js';
 import Cookies from 'universal-cookie';
+import { subscription } from '../redux/userSlice';
 const cookies = new Cookies();
 const token = cookies.get('token');
 
@@ -124,21 +131,22 @@ const Subscribe = styled.button`
 
 function Video() {
   const { currentUser } = useSelector((state) => state.user);
-  const { currentVideo } = useSelector((state) => state.video);
+  const { currentVideo, loading } = useSelector((state) => state.video);
   const dispatch = useDispatch();
 
   const path = useLocation().pathname.split('/')[2];
 
-  // const [video, setVideo] = useState({});
   const [channel, setChannel] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
+      dispatch(fetchStart());
       try {
         const videoRes = await axios.get(`${hostingUrl}/video/find/${path}`);
         const channelRes = await axios.get(
           `${hostingUrl}/user/find/${videoRes.data.userId}`
         );
+
         setChannel(channelRes.data);
         dispatch(fetchSuccess(videoRes.data));
       } catch (error) {
@@ -168,67 +176,92 @@ function Video() {
     });
     dispatch(dislike(currentUser.id));
   };
+  const handleSub = async () => {
+    currentUser.subscribedUsers.includes(channel._id)
+      ? await axios({
+          method: 'put',
+          url: `${hostingUrl}/user/unsub/${channel._id}`,
+          headers: {
+            access_token: token,
+          },
+        })
+      : await axios({
+          method: 'put',
+          url: `${hostingUrl}/user/sub/${channel._id}`,
+          headers: {
+            access_token: token,
+          },
+        });
+    dispatch(subscription(channel._id));
+  };
 
   return (
     <Container>
-      <Content>
-        <VideoWrapper>
-          <iframe
-            width="100%"
-            height="430rem"
-            src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
-            title="Youtube Video Player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </VideoWrapper>
-        <Title>{currentVideo.title}</Title>
-        <Details>
-          <Info>
-            {currentVideo.views} views • {format(currentVideo.createdAt)}
-          </Info>
-          <Buttons>
-            <Button onClick={handleLike}>
-              {/* STILL ERROR IF NOT LOGIN */}
-              {currentVideo.likes?.includes(currentUser.id) ? (
-                <ThumbUp />
-              ) : (
-                <ThumbUpOutlined />
-              )}{' '}
-              {currentVideo.likes?.length}
-            </Button>
-            <Button onClick={handleDislike}>
-              {currentVideo.dislikes?.includes(currentUser.id) ? (
-                <ThumbDown />
-              ) : (
-                <ThumbDownOutlined />
-              )}{' '}
-              Dislike
-            </Button>
-            <Button>
-              <ReplyOutlined /> Share
-            </Button>
-            <Button>
-              <AddTaskOutlined /> Save
-            </Button>
-          </Buttons>
-        </Details>
-        <Hr />
-        <Channel>
-          <ChannelInfo>
-            <Image src={channel.img} />
-            <ChannelDetail>
-              <ChannelName>{channel.name}</ChannelName>
-              <ChannelCounter>{channel.subscribers} Subscriber</ChannelCounter>
-              <Description>{currentVideo.desc}</Description>
-            </ChannelDetail>
-          </ChannelInfo>
-          <Subscribe>SUBSCRIBE</Subscribe>
-        </Channel>
-        <Hr />
-        <Comments />
-      </Content>
+      {!loading && currentVideo ? (
+        <Content>
+          <VideoWrapper>
+            <iframe
+              width="100%"
+              height="430rem"
+              src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
+              title="Youtube Video Player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </VideoWrapper>
+          <Title>{currentVideo.title}</Title>
+          <Details>
+            <Info>
+              {currentVideo.views} views • {format(currentVideo.createdAt)}
+            </Info>
+            <Buttons>
+              <Button onClick={handleLike}>
+                {currentVideo.likes?.includes(currentUser.id) ? (
+                  <ThumbUp />
+                ) : (
+                  <ThumbUpOutlined />
+                )}{' '}
+                {currentVideo.likes?.length}
+              </Button>
+              <Button onClick={handleDislike}>
+                {currentVideo.dislikes?.includes(currentUser.id) ? (
+                  <ThumbDown />
+                ) : (
+                  <ThumbDownOutlined />
+                )}{' '}
+                Dislike
+              </Button>
+              <Button>
+                <ReplyOutlined /> Share
+              </Button>
+              <Button>
+                <AddTaskOutlined /> Save
+              </Button>
+            </Buttons>
+          </Details>
+          <Hr />
+          <Channel>
+            <ChannelInfo>
+              <Image src={channel.img} />
+              <ChannelDetail>
+                <ChannelName>{channel.name}</ChannelName>
+                <ChannelCounter>
+                  {channel.subscribers} Subscriber
+                </ChannelCounter>
+                <Description>{currentVideo.desc}</Description>
+              </ChannelDetail>
+            </ChannelInfo>
+            <Subscribe onClick={handleSub}>
+              {currentUser.subscribedUsers?.includes(channel._id)
+                ? 'SUBSCRIBED'
+                : 'SUBSCRIBE'}
+            </Subscribe>
+          </Channel>
+          <Hr />
+          <Comments />
+        </Content>
+      ) : null}
       {/* <Recommendation>
         <Card type="sm" />
         <Card type="sm" />

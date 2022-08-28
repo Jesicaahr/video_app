@@ -89,7 +89,6 @@ function SignIn() {
       const cookies = new Cookies();
 
       cookies.set('token', access_token, { path: '/' });
-      // localStorage.setItem('token', access_token);
       dispatch(loginSuccess(res.data));
     } catch (error) {
       dispatch(loginFailure());
